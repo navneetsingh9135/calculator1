@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom styles and font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .calculator {
+            background-color: #1f2937;
+            padding: 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 400px;
+        }
+        .display {
+            background-color: #374151;
+            color: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: right;
+            margin-bottom: 1rem;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+        .display-input {
+            font-size: 1.5rem;
+            min-height: 2rem;
+            opacity: 0.7;
+        }
+        .display-result {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .btn {
+            background-color: #4b5563;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            border-radius: 1.5rem;
+            padding: 1.25rem;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn:hover {
+            background-color: #6b7280;
+        }
+        .btn-operator {
+            background-color: #4f46e5;
+        }
+        .btn-operator:hover {
+            background-color: #6366f1;
+        }
+        .btn-clear {
+            background-color: #dc2626;
+        }
+        .btn-clear:hover {
+            background-color: #ef4444;
+        }
+        .btn-equals {
+            background-color: #22c55e;
+        }
+        .btn-equals:hover {
+            background-color: #4ade80;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="calculator">
+        <!-- Display Section -->
+        <div class="display">
+            <div id="input-display" class="display-input"></div>
+            <div id="result-display" class="display-result">0</div>
+        </div>
+
+        <!-- Buttons Grid -->
+        <div class="grid grid-cols-4 gap-4">
+            <div class="btn btn-clear col-span-2" onclick="clearDisplay()">AC</div>
+            <div class="btn btn-operator" onclick="appendInput('/')">/</div>
+            <div class="btn btn-operator" onclick="appendInput('*')">*</div>
+            <div class="btn" onclick="appendInput('7')">7</div>
+            <div class="btn" onclick="appendInput('8')">8</div>
+            <div class="btn" onclick="appendInput('9')">9</div>
+            <div class="btn btn-operator" onclick="appendInput('-')">-</div>
+            <div class="btn" onclick="appendInput('4')">4</div>
+            <div class="btn" onclick="appendInput('5')">5</div>
+            <div class="btn" onclick="appendInput('6')">6</div>
+            <div class="btn btn-operator" onclick="appendInput('+')">+</div>
+            <div class="btn" onclick="appendInput('1')">1</div>
+            <div class="btn" onclick="appendInput('2')">2</div>
+            <div class="btn" onclick="appendInput('3')">3</div>
+            <div class="btn btn-equals row-span-2 flex items-center justify-center" onclick="calculate()">=</div>
+            <div class="btn col-span-2" onclick="appendInput('0')">0</div>
+            <div class="btn" onclick="appendInput('.')">.</div>
+        </div>
+    </div>
+
+    <script>
+        const inputDisplay = document.getElementById('input-display');
+        const resultDisplay = document.getElementById('result-display');
+        let currentInput = '';
+        let result = '0';
+        let equalsPressed = false;
+
+        // Function to append characters to the input
+        function appendInput(value) {
+            // Reset state if a calculation was just completed
+            if (equalsPressed) {
+                currentInput = '';
+                equalsPressed = false;
+            }
+
+            // Prevent multiple operators in a row
+            const lastChar = currentInput.slice(-1);
+            if (['+', '-', '*', '/'].includes(value) && ['+', '-', '*', '/'].includes(lastChar)) {
+                currentInput = currentInput.slice(0, -1) + value;
+            } else {
+                currentInput += value;
+            }
+
+            // Update the display
+            inputDisplay.textContent = currentInput || '0';
+        }
+
+        // Function to clear the display and state
+        function clearDisplay() {
+            currentInput = '';
+            result = '0';
+            equalsPressed = false;
+            inputDisplay.textContent = '';
+            resultDisplay.textContent = '0';
+        }
+
+        // Function to perform the calculation
+        function calculate() {
+            if (currentInput === '') {
+                return;
+            }
+
+            try {
+                // Use the built-in eval() function to calculate the result
+                // Note: In a real-world app, for security, a custom parser should be used instead of eval().
+                result = eval(currentInput).toString();
+                resultDisplay.textContent = result;
+                inputDisplay.textContent = currentInput + ' =';
+                currentInput = result; // Set current input to the result for further calculations
+                equalsPressed = true;
+            } catch (error) {
+                resultDisplay.textContent = 'Error';
+                equalsPressed = true;
+            }
+        }
+    </script>
+</body>
+</html>
