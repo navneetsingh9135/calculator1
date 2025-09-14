@@ -3,170 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Calculator</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Scientific Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom styles and font -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: linear-gradient(to bottom right, #1f2937, #111827);
         }
-        .calculator {
-            background-color: #1f2937;
-            padding: 1.5rem;
-            border-radius: 2rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            width: 95%;
-            max-width: 400px;
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
         }
-        .display {
-            background-color: #374151;
-            color: white;
-            padding: 1rem;
-            border-radius: 1rem;
-            text-align: right;
-            margin-bottom: 1rem;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-        .display-input {
-            font-size: 1.5rem;
-            min-height: 2rem;
-            opacity: 0.7;
-        }
-        .display-result {
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-        .btn {
-            background-color: #4b5563;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 500;
-            border-radius: 1.5rem;
-            padding: 1.25rem;
-            transition: background-color 0.2s ease-in-out;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .btn:hover {
-            background-color: #6b7280;
-        }
-        .btn-operator {
-            background-color: #4f46e5;
-        }
-        .btn-operator:hover {
-            background-color: #6366f1;
-        }
-        .btn-clear {
-            background-color: #dc2626;
-        }
-        .btn-clear:hover {
-            background-color: #ef4444;
-        }
-        .btn-equals {
-            background-color: #22c55e;
-        }
-        .btn-equals:hover {
-            background-color: #4ade80;
+        .calculator-button {
+            @apply p-4 rounded-xl text-white font-semibold transition-transform transform hover:scale-105 active:scale-95 shadow-md;
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="flex items-center justify-center min-h-screen p-4 text-white">
 
-    <div class="calculator">
-        <!-- Display Section -->
-        <div class="display">
-            <div id="input-display" class="display-input"></div>
-            <div id="result-display" class="display-result">0</div>
+    <div class="calculator-container bg-gray-800 p-6 rounded-3xl shadow-2xl w-full max-w-sm">
+        <!-- Display -->
+        <div class="mb-4">
+            <input id="history-display" type="text" class="w-full text-right bg-gray-700 text-gray-400 text-sm px-3 pt-2 rounded-t-xl" value="" readonly>
+            <input id="main-display" type="text" class="w-full text-right bg-gray-700 text-white text-3xl font-bold px-3 pb-2 rounded-b-xl focus:outline-none" value="0" readonly>
         </div>
 
         <!-- Buttons Grid -->
-        <div class="grid grid-cols-4 gap-4">
-            <div class="btn btn-clear col-span-2" onclick="clearDisplay()">AC</div>
-            <div class="btn btn-operator" onclick="appendInput('/')">/</div>
-            <div class="btn btn-operator" onclick="appendInput('*')">*</div>
-            <div class="btn" onclick="appendInput('7')">7</div>
-            <div class="btn" onclick="appendInput('8')">8</div>
-            <div class="btn" onclick="appendInput('9')">9</div>
-            <div class="btn btn-operator" onclick="appendInput('-')">-</div>
-            <div class="btn" onclick="appendInput('4')">4</div>
-            <div class="btn" onclick="appendInput('5')">5</div>
-            <div class="btn" onclick="appendInput('6')">6</div>
-            <div class="btn btn-operator" onclick="appendInput('+')">+</div>
-            <div class="btn" onclick="appendInput('1')">1</div>
-            <div class="btn" onclick="appendInput('2')">2</div>
-            <div class="btn" onclick="appendInput('3')">3</div>
-            <div class="btn btn-equals row-span-2 flex items-center justify-center" onclick="calculate()">=</div>
-            <div class="btn col-span-2" onclick="appendInput('0')">0</div>
-            <div class="btn" onclick="appendInput('.')">.</div>
+        <div class="calculator-grid">
+            <!-- Row 1 (Scientific Functions) -->
+            <button class="calculator-button bg-gray-600" onclick="handleInput('sin(')">sin</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput('cos(')">cos</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput('tan(')">tan</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput('log(')">log</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput('sqrt(')">√</button>
+
+            <!-- Row 2 -->
+            <button class="calculator-button bg-gray-600" onclick="handleInput('π')">π</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput('e')">e</button>
+            <button class="calculator-button bg-orange-500" onclick="handleClear('AC')">AC</button>
+            <button class="calculator-button bg-orange-500" onclick="handleClear('DEL')">DEL</button>
+            <button class="calculator-button bg-orange-500" onclick="handleInput('/')">÷</button>
+
+            <!-- Row 3 -->
+            <button class="calculator-button bg-gray-700" onclick="handleInput('7')">7</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('8')">8</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('9')">9</button>
+            <button class="calculator-button bg-orange-500" onclick="handleInput('*')">×</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput('(')">(</button>
+
+            <!-- Row 4 -->
+            <button class="calculator-button bg-gray-700" onclick="handleInput('4')">4</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('5')">5</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('6')">6</button>
+            <button class="calculator-button bg-orange-500" onclick="handleInput('-')">−</button>
+            <button class="calculator-button bg-gray-600" onclick="handleInput(')')">)</button>
+
+            <!-- Row 5 -->
+            <button class="calculator-button bg-gray-700" onclick="handleInput('1')">1</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('2')">2</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('3')">3</button>
+            <button class="calculator-button bg-orange-500" onclick="handleInput('+')">+</button>
+            <button class="calculator-button bg-blue-500 row-span-2" onclick="calculateResult()">=</button>
+
+            <!-- Row 6 -->
+            <button class="calculator-button bg-gray-700 col-span-2" onclick="handleInput('0')">0</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('.')">.</button>
+            <button class="calculator-button bg-gray-700" onclick="handleInput('^')">^</button>
+
         </div>
     </div>
 
     <script>
-        const inputDisplay = document.getElementById('input-display');
-        const resultDisplay = document.getElementById('result-display');
-        let currentInput = '';
-        let result = '0';
-        let equalsPressed = false;
+        const historyDisplay = document.getElementById('history-display');
+        const mainDisplay = document.getElementById('main-display');
+        let expression = '';
 
-        // Function to append characters to the input
-        function appendInput(value) {
-            // Reset state if a calculation was just completed
-            if (equalsPressed) {
-                currentInput = '';
-                equalsPressed = false;
-            }
+        const operations = {
+            '÷': '/',
+            '×': '*',
+            '−': '-',
+            'π': 'Math.PI',
+            'e': 'Math.E',
+            'sin(': 'Math.sin(',
+            'cos(': 'Math.cos(',
+            'tan(': 'Math.tan(',
+            'log(': 'Math.log10(', // Using log10 for common log
+            'sqrt(': 'Math.sqrt(',
+            '^': '**'
+        };
 
-            // Prevent multiple operators in a row
-            const lastChar = currentInput.slice(-1);
-            if (['+', '-', '*', '/'].includes(value) && ['+', '-', '*', '/'].includes(lastChar)) {
-                currentInput = currentInput.slice(0, -1) + value;
+        function handleInput(value) {
+            // If the display is '0' and the new input is not an operator or '.'
+            if (mainDisplay.value === '0' && !['+', '-', '*', '/', '.', 'sin(', 'cos(', 'tan(', 'log(', 'sqrt(', '^'].includes(value)) {
+                mainDisplay.value = value;
             } else {
-                currentInput += value;
+                mainDisplay.value += value;
             }
-
-            // Update the display
-            inputDisplay.textContent = currentInput || '0';
+            expression += operations[value] || value;
+            historyDisplay.value = mainDisplay.value.replace(/sin|cos|tan|log|sqrt/g, (match) => {
+                return match.slice(0, 3);
+            });
         }
 
-        // Function to clear the display and state
-        function clearDisplay() {
-            currentInput = '';
-            result = '0';
-            equalsPressed = false;
-            inputDisplay.textContent = '';
-            resultDisplay.textContent = '0';
+        function handleClear(type) {
+            if (type === 'AC') {
+                mainDisplay.value = '0';
+                historyDisplay.value = '';
+                expression = '';
+            } else if (type === 'DEL') {
+                mainDisplay.value = mainDisplay.value.slice(0, -1);
+                expression = expression.slice(0, -1);
+                if (mainDisplay.value === '') {
+                    mainDisplay.value = '0';
+                }
+            }
         }
 
-        // Function to perform the calculation
-        function calculate() {
-            if (currentInput === '') {
-                return;
-            }
-
+        function calculateResult() {
             try {
-                // Use the built-in eval() function to calculate the result
-                // Note: In a real-world app, for security, a custom parser should be used instead of eval().
-                result = eval(currentInput).toString();
-                resultDisplay.textContent = result;
-                inputDisplay.textContent = currentInput + ' =';
-                currentInput = result; // Set current input to the result for further calculations
-                equalsPressed = true;
+                // Replace functions with Math. functions for evaluation
+                const safeExpression = expression.replace(/sin\(/g, 'Math.sin(')
+                                                 .replace(/cos\(/g, 'Math.cos(')
+                                                 .replace(/tan\(/g, 'Math.tan(')
+                                                 .replace(/log\(/g, 'Math.log10(')
+                                                 .replace(/sqrt\(/g, 'Math.sqrt(')
+                                                 .replace(/π/g, 'Math.PI')
+                                                 .replace(/e/g, 'Math.E');
+
+                const result = eval(safeExpression);
+                historyDisplay.value = mainDisplay.value + ' =';
+                mainDisplay.value = result;
+                expression = result.toString();
             } catch (error) {
-                resultDisplay.textContent = 'Error';
-                equalsPressed = true;
+                historyDisplay.value = '';
+                mainDisplay.value = 'Error';
+                expression = '';
             }
         }
+
+        // Handle keyboard input
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if ((key >= '0' && key <= '9') || key === '.') {
+                handleInput(key);
+            } else if (key === '+') {
+                handleInput('+');
+            } else if (key === '-') {
+                handleInput('−');
+            } else if (key === '*') {
+                handleInput('×');
+            } else if (key === '/') {
+                handleInput('÷');
+            } else if (key === 'Enter' || key === '=') {
+                calculateResult();
+            } else if (key === 'Backspace') {
+                handleClear('DEL');
+            } else if (key === 'Escape') {
+                handleClear('AC');
+            }
+        });
+
     </script>
 </body>
 </html>
